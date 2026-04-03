@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Companies – Admin{% endblock %}
+{% block content %}
+<div class="pp-page">
+  <div class="pp-page-header">
+    <div>
+      <h4 class="pp-page-title"><i class="bi bi-building me-2"></i>Companies</h4>
+      <p class="pp-page-sub">Manage company registrations and approvals</p>
+    </div>
+  </div>
+  <div class="pp-card mb-4">
+    <div class="pp-card-body">
+      <form method="GET" class="row g-3 align-items-end">
+        <div class="col-md-6">
+          <label class="form-label pp-label">Search</label>
+          <div class="input-group pp-input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="search" value="{{ search }}" class="form-control pp-input" placeholder="Company name, industry, HR contact..."/>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label pp-label">Status</label>
+          <select name="status" class="form-select pp-input">
+            <option value="all" {% if status_filter=='all' %}selected{% endif %}>All Status</option>
+            <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
+            <option value="approved" {% if status_filter=='approved' %}selected{% endif %}>Approved</option>
+            <option value="rejected" {% if status_filter=='rejected' %}selected{% endif %}>Rejected</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-pp-primary w-100"><i class="bi bi-funnel me-1"></i>Filter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="pp-card">
+    <div class="pp-card-header">{{ companies|length }} compan{{ 'y' if companies|length == 1 else 'ies' }} found</div>
+    <div class="pp-card-body p-0">
+      {% if companies %}
+      <div class="table-responsive">
+        <table class="table pp-table mb-0">
+          <thead>
+            <tr><th>ID</th><th>Company</th><th>Industry</th><th>HR Contact</th><th>Status</th><th>Blacklisted</th><th>Drives</th><th>Registered</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for c in companies %}
+            <tr class="{% if c['is_blacklisted'] %}table-danger-light{% endif %}">
+              <td class="mono">{{ c['id'] }}</td>
+              <td>
+                <a href="{{ url_for('admin_company_detail', cid=c['id']) }}" class="fw-600 pp-link">{{ c['company_name'] }}</a>
+                {% if c['website'] %}<br><small class="text-muted">{{ c['website'][:35] }}</small>{% endif %}
+              </td>
+              <td>{{ c['industry'] or '—' }}</td>
+              <td>{{ c['hr_contact'] or '—' }}{% if c['hr_email'] %}<br><small class="text-muted">{{ c['hr_email'] }}</small>{% endif %}</td>
+              <td><span class="status-badge status-{{ c['approval_status'] }}">{{ c['approval_status']|capitalize }}</span></td>
+              <td>{% if c['is_blacklisted'] %}<span class="badge bg-danger">Yes</span>{% else %}<span class="badge bg-light text-muted">No</span>{% endif %}</td>
+              <td class="mono">{{ c['drive_count'] }}</td>
+              <td class="small mono">{{ c['created_at']|fmtdate }}</td>
+              <td>
+                <div class="d-flex gap-1 flex-wrap">
+                  {% if c['approval_status'] == 'pending' %}
+                  <form method="POST" action="{{ url_for('admin_approve_company', cid=c['id']) }}"><button class="btn btn-xs btn-success" title="Approve"><i class="bi bi-check-lg"></i></button></form>
+                  <form method="POST" action="{{ url_for('admin_reject_company', cid=c['id']) }}"><button class="btn btn-xs btn-warning" title="Reject"><i class="bi bi-x-lg"></i></button></form>
+                  {% elif c['approval_status'] == 'rejected' %}
+                  <form method="POST" action="{{ url_for('admin_approve_company', cid=c['id']) }}"><button class="btn btn-xs btn-success" title="Approve"><i class="bi bi-check-lg"></i></button></form>
+                  {% endif %}
+                  <form method="POST" action="{{ url_for('admin_blacklist_company', cid=c['id']) }}">
+                    <button class="btn btn-xs {% if c['is_blacklisted'] %}btn-secondary{% else %}btn-outline-danger{% endif %}" title="{% if c['is_blacklisted'] %}Unblacklist{% else %}Blacklist{% endif %}">
+                      <i class="bi bi-{% if c['is_blacklisted'] %}unlock{% else %}slash-circle{% endif %}"></i>
+                    </button>
+                  </form>
+                  <form method="POST" action="{{ url_for('admin_delete_company', cid=c['id']) }}" onsubmit="return confirm('Delete this company?')">
+                    <button class="btn btn-xs btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}<div class="pp-empty"><i class="bi bi-building fs-1 text-muted"></i><br>No companies found.</div>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Company Dashboard – PlacePro{% endblock %}
+{% block content %}
+<div class="pp-page">
+  <div class="pp-page-header">
+    <div><h4 class="pp-page-title"><i class="bi bi-building me-2"></i>{{ company['company_name'] }}</h4><p class="pp-page-sub">{{ company['industry'] or 'Placement Portal' }} · Company Dashboard</p></div>
+    <a href="{{ url_for('company_create_drive') }}" class="btn btn-pp-primary"><i class="bi bi-plus-circle me-2"></i>Post New Drive</a>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-blue"><div class="pp-stat-icon"><i class="bi bi-briefcase-fill"></i></div><div class="pp-stat-val">{{ drives|length }}</div><div class="pp-stat-lbl">Total Drives</div></div></div>
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-green"><div class="pp-stat-icon"><i class="bi bi-people-fill"></i></div><div class="pp-stat-val">{{ total_applicants }}</div><div class="pp-stat-lbl">Total Applicants</div></div></div>
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-amber"><div class="pp-stat-icon"><i class="bi bi-bookmark-star-fill"></i></div><div class="pp-stat-val">{{ shortlisted }}</div><div class="pp-stat-lbl">Shortlisted</div></div></div>
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-rose"><div class="pp-stat-icon"><i class="bi bi-trophy-fill"></i></div><div class="pp-stat-val">{{ selected }}</div><div class="pp-stat-lbl">Selected</div></div></div>
+  </div>
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="pp-card h-100">
+        <div class="pp-card-header"><i class="bi bi-info-circle me-2"></i>Company Info</div>
+        <div class="pp-card-body">
+          <table class="table pp-detail-table">
+            <tr><th>HR Contact</th><td>{{ company['hr_contact'] or '—' }}</td></tr>
+            <tr><th>HR Email</th><td>{{ company['hr_email'] or '—' }}</td></tr>
+            <tr><th>Website</th><td>{% if company['website'] %}<a href="{{ company['website'] }}" target="_blank" class="text-truncate d-block" style="max-width:180px">{{ company['website'] }}</a>{% else %}—{% endif %}</td></tr>
+            <tr><th>Industry</th><td>{{ company['industry'] or '—' }}</td></tr>
+            <tr><th>Status</th><td><span class="status-badge status-{{ company['approval_status'] }}">{{ company['approval_status']|capitalize }}</span></td></tr>
+          </table>
+          {% if company['description'] %}<p class="small text-muted mt-2">{{ company['description'][:200] }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="pp-card h-100">
+        <div class="pp-card-header d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-briefcase me-2"></i>Your Placement Drives</span>
+          <a href="{{ url_for('company_create_drive') }}" class="btn btn-xs btn-pp-primary"><i class="bi bi-plus me-1"></i>New</a>
+        </div>
+        <div class="pp-card-body p-0">
+          {% if drives %}
+          <div class="table-responsive">
+            <table class="table pp-table mb-0">
+              <thead><tr><th>Job Title</th><th>Location</th><th>Deadline</th><th>Applicants</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                {% for d in drives %}
+                <tr>
+                  <td><div class="fw-600">{{ d['job_title'] }}</div><small class="text-muted">{{ d['package'] or 'Package TBD' }}</small></td>
+                  <td>{{ d['location'] or '—' }}</td>
+                  <td class="mono small">{{ d['application_deadline']|fmtdate if d['application_deadline'] else '—' }}</td>
+                  <td><a href="{{ url_for('company_drive_applications', did=d['id']) }}" class="mono pp-link">{{ d['app_count'] }}</a></td>
+                  <td><span class="status-badge status-{{ d['status'] }}">{{ d['status']|capitalize }}</span></td>
+                  <td>
+                    <div class="d-flex gap-1">
+                      <a href="{{ url_for('company_drive_applications', did=d['id']) }}" class="btn btn-xs btn-outline-pp" title="Applications"><i class="bi bi-people"></i></a>
+                      {% if d['status'] != 'closed' %}
+                      <a href="{{ url_for('company_edit_drive', did=d['id']) }}" class="btn btn-xs btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
+                      <form method="POST" action="{{ url_for('company_close_drive', did=d['id']) }}" class="d-inline"><button class="btn btn-xs btn-outline-warning" title="Close"><i class="bi bi-lock"></i></button></form>
+                      {% endif %}
+                      <form method="POST" action="{{ url_for('company_delete_drive', did=d['id']) }}" class="d-inline" onsubmit="return confirm('Delete this drive?')"><button class="btn btn-xs btn-danger" title="Delete"><i class="bi bi-trash"></i></button></form>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}<div class="pp-empty"><i class="bi bi-briefcase fs-1 text-muted"></i><br>No drives yet. <a href="{{ url_for('company_create_drive') }}">Post your first drive</a></div>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Students – Admin{% endblock %}
+{% block content %}
+<div class="pp-page">
+  <div class="pp-page-header">
+    <div><h4 class="pp-page-title"><i class="bi bi-people me-2"></i>Students</h4><p class="pp-page-sub">Search, view, and manage student accounts</p></div>
+  </div>
+  <div class="pp-card mb-4">
+    <div class="pp-card-body">
+      <form method="GET" class="row g-3 align-items-end">
+        <div class="col-md-8">
+          <label class="form-label pp-label">Search Students</label>
+          <div class="input-group pp-input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="search" value="{{ search }}" class="form-control pp-input" placeholder="Name, email, phone, department, username..."/>
+          </div>
+        </div>
+        <div class="col-md-4"><button type="submit" class="btn btn-pp-primary w-100"><i class="bi bi-search me-1"></i>Search</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="pp-card">
+    <div class="pp-card-header">{{ students|length }} student(s) found</div>
+    <div class="pp-card-body p-0">
+      {% if students %}
+      <div class="table-responsive">
+        <table class="table pp-table mb-0">
+          <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>CGPA</th><th>Grad Year</th><th>Contact</th><th>Apps</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% for s in students %}
+            <tr class="{% if s['is_blacklisted'] %}table-danger-light{% endif %}">
+              <td class="mono">{{ s['id'] }}</td>
+              <td><a href="{{ url_for('admin_student_detail', sid=s['id']) }}" class="fw-600 pp-link">{{ s['full_name'] }}</a><br><small class="mono text-muted">@{{ s['username'] }}</small></td>
+              <td>{{ s['department'] or '—' }}</td>
+              <td class="mono">{{ '%.2f'|format(s['cgpa']) if s['cgpa'] else '—' }}</td>
+              <td class="mono">{{ s['graduation_year'] or '—' }}</td>
+              <td><small>{{ s['email'] or '—' }}<br>{{ s['phone'] or '—' }}</small></td>
+              <td class="mono">{{ s['app_count'] }}</td>
+              <td>{% if s['is_blacklisted'] %}<span class="badge bg-danger">Blacklisted</span>{% else %}<span class="badge bg-success">Active</span>{% endif %}</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="{{ url_for('admin_student_detail', sid=s['id']) }}" class="btn btn-xs btn-outline-pp" title="View"><i class="bi bi-eye"></i></a>
+                  <form method="POST" action="{{ url_for('admin_blacklist_student', sid=s['id']) }}" class="d-inline">
+                    <button class="btn btn-xs {% if s['is_blacklisted'] %}btn-secondary{% else %}btn-outline-danger{% endif %}" title="{% if s['is_blacklisted'] %}Unblacklist{% else %}Blacklist{% endif %}">
+                      <i class="bi bi-{% if s['is_blacklisted'] %}unlock{% else %}slash-circle{% endif %}"></i>
+                    </button>
+                  </form>
+                  <form method="POST" action="{{ url_for('admin_delete_student', sid=s['id']) }}" class="d-inline" onsubmit="return confirm('Delete {{ s['full_name'] }}?')">
+                    <button class="btn btn-xs btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}<div class="pp-empty"><i class="bi bi-people fs-1 text-muted"></i><br>No students found.</div>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

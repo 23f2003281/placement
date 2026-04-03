@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Browse Drives – PlacePro{% endblock %}
+{% block content %}
+<div class="pp-page">
+  <div class="pp-page-header">
+    <div><h4 class="pp-page-title"><i class="bi bi-briefcase me-2"></i>Browse Placement Drives</h4><p class="pp-page-sub">{{ drives|length }} active drive(s) available</p></div>
+  </div>
+  {% if drives %}
+  <div class="row g-4">
+    {% for d in drives %}
+    <div class="col-md-6 col-lg-4">
+      <div class="drive-card {% if d['id'] in applied_ids %}drive-card-applied{% endif %}">
+        <div class="drive-card-header">
+          <div class="drive-company-logo">{{ d['company_name'][0]|upper }}</div>
+          <div>
+            <div class="drive-company">{{ d['company_name'] }}</div>
+            <div class="drive-industry">{{ d['industry'] or 'Company' }}</div>
+          </div>
+          {% if d['id'] in applied_ids %}<span class="drive-applied-badge"><i class="bi bi-check-circle-fill me-1"></i>Applied</span>{% endif %}
+        </div>
+        <h5 class="drive-title">{{ d['job_title'] }}</h5>
+        <div class="drive-meta">
+          {% if d['location'] %}<span><i class="bi bi-geo-alt"></i>{{ d['location'] }}</span>{% endif %}
+          {% if d['package'] %}<span><i class="bi bi-currency-rupee"></i>{{ d['package'] }}</span>{% endif %}
+          {% if d['application_deadline'] %}<span class="{% if d['application_deadline'] < today %}text-danger{% endif %}"><i class="bi bi-calendar-event"></i>Deadline: {{ d['application_deadline']|fmtdate }}{% if d['application_deadline'] < today %} <small>(Expired)</small>{% endif %}</span>{% endif %}
+        </div>
+        {% if d['job_description'] %}<p class="drive-desc">{{ d['job_description'][:150] }}{% if d['job_description']|length > 150 %}...{% endif %}</p>{% endif %}
+        {% if d['eligibility_criteria'] %}<div class="drive-eligibility"><i class="bi bi-shield-check me-1"></i><span>{{ d['eligibility_criteria'][:120] }}{% if d['eligibility_criteria']|length > 120 %}...{% endif %}</span></div>{% endif %}
+        <div class="drive-footer">
+          {% if d['id'] in applied_ids %}<button class="btn btn-sm btn-success w-100" disabled><i class="bi bi-check-circle-fill me-2"></i>Already Applied</button>
+          {% elif d['application_deadline'] and d['application_deadline'] < today %}<button class="btn btn-sm btn-secondary w-100" disabled><i class="bi bi-clock me-2"></i>Deadline Passed</button>
+          {% else %}<a href="{{ url_for('student_apply', did=d['id']) }}" class="btn btn-sm btn-pp-primary w-100"><i class="bi bi-send me-2"></i>Apply Now</a>{% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="pp-empty-page"><i class="bi bi-briefcase fs-1 text-muted"></i><h5 class="mt-3">No Active Drives</h5><p class="text-muted">Check back soon for new placement opportunities.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Login – PlacePro{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-split">
+    <div class="auth-left d-none d-lg-flex">
+      <div class="auth-left-inner">
+        <div class="auth-brand mb-4"><i class="bi bi-mortarboard-fill me-2"></i>PlacePro</div>
+        <h2 class="auth-left-title">Your career<br>journey starts here.</h2>
+        <p class="auth-left-sub mt-3">Access your placement dashboard and manage opportunities, applications, and recruitment all in one place.</p>
+        <div class="auth-left-roles mt-4">
+          <div class="auth-role-pill"><i class="bi bi-shield-lock-fill me-2"></i>Admin</div>
+          <div class="auth-role-pill"><i class="bi bi-building me-2"></i>Company</div>
+          <div class="auth-role-pill"><i class="bi bi-person me-2"></i>Student</div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-right d-flex align-items-center justify-content-center">
+      <div class="auth-box w-100" style="max-width:420px">
+        <h3 class="auth-title mb-1">Welcome back</h3>
+        <p class="auth-sub mb-4">Log in to your PlacePro account</p>
+
+        <form method="POST" action="{{ url_for('login') }}" novalidate>
+          <div class="mb-3">
+            <label class="form-label pp-label">Username</label>
+            <div class="input-group pp-input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" name="username" class="form-control pp-input" placeholder="Enter username" required/>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label pp-label">Password</label>
+            <div class="input-group pp-input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="password" name="password" class="form-control pp-input" placeholder="Enter password" required/>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-pp-primary w-100 py-2">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+          </button>
+        </form>
+
+        <div class="auth-divider my-4"><span>New here?</span></div>
+        <div class="d-grid gap-2">
+          <a href="{{ url_for('register_student') }}" class="btn btn-outline-pp">
+            <i class="bi bi-person-plus me-2"></i>Register as Student
+          </a>
+          <a href="{{ url_for('register_company') }}" class="btn btn-outline-pp">
+            <i class="bi bi-building me-2"></i>Register as Company
+          </a>
+        </div>
+
+        <div class="mt-4 p-3 auth-hint-box">
+          <small><b><i class="bi bi-info-circle me-1"></i>Demo Credentials</b><br>
+          Admin: <code>admin</code> / <code>admin123</code></small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

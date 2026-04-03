@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Company Registration – PlacePro{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="pp-card">
+          <div class="pp-card-header">
+            <h4 class="mb-0"><i class="bi bi-building me-2"></i>Company Registration</h4>
+            <p class="mb-0 mt-1 text-muted small">Register your company to post placement drives. Admin approval is required before you can log in.</p>
+          </div>
+          <div class="pp-card-body">
+            <form method="POST" action="{{ url_for('register_company') }}" novalidate>
+
+              <div class="form-section-title">Account Credentials</div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Username <span class="req">*</span></label>
+                  <input type="text" name="username" class="form-control pp-input" placeholder="Company login username" required/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Email <span class="req">*</span></label>
+                  <input type="email" name="email" class="form-control pp-input" placeholder="company@domain.com" required/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Password <span class="req">*</span></label>
+                  <input type="password" name="password" class="form-control pp-input" placeholder="Min 6 characters" required minlength="6"/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Confirm Password <span class="req">*</span></label>
+                  <input type="password" name="confirm_password" class="form-control pp-input" placeholder="Repeat password" required/>
+                </div>
+              </div>
+
+              <div class="form-section-title">Company Information</div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Company Name <span class="req">*</span></label>
+                  <input type="text" name="company_name" class="form-control pp-input" placeholder="Official company name" required/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Industry</label>
+                  <select name="industry" class="form-select pp-input">
+                    <option value="">Select Industry</option>
+                    <option>Information Technology</option>
+                    <option>Software / SaaS</option>
+                    <option>Finance & Banking</option>
+                    <option>E-Commerce</option>
+                    <option>Consulting</option>
+                    <option>Manufacturing</option>
+                    <option>Healthcare</option>
+                    <option>Education</option>
+                    <option>Defence / Government</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">HR Contact Name</label>
+                  <input type="text" name="hr_contact" class="form-control pp-input" placeholder="HR Manager Name"/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">HR Email</label>
+                  <input type="email" name="hr_email" class="form-control pp-input" placeholder="hr@company.com"/>
+                </div>
+                <div class="col-12">
+                  <label class="form-label pp-label">Company Website</label>
+                  <input type="url" name="website" class="form-control pp-input" placeholder="https://www.company.com"/>
+                </div>
+                <div class="col-12">
+                  <label class="form-label pp-label">Company Description</label>
+                  <textarea name="description" rows="3" class="form-control pp-input" placeholder="Brief about your company, work culture, and what you offer..."></textarea>
+                </div>
+              </div>
+
+              <div class="pp-info-box mb-4">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong>Note:</strong> After registration, your account will be reviewed by the admin. You'll be able to log in only after approval.
+              </div>
+
+              <div class="d-flex gap-3 mt-2">
+                <button type="submit" class="btn btn-pp-primary px-5">
+                  <i class="bi bi-building-add me-2"></i>Register Company
+                </button>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-pp">
+                  Back to Login
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

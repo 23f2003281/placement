@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard – PlacePro{% endblock %}
+{% block content %}
+<div class="pp-page">
+  <div class="pp-page-header">
+    <div><h4 class="pp-page-title"><i class="bi bi-speedometer2 me-2"></i>My Dashboard</h4><p class="pp-page-sub">Welcome back, {{ student['full_name'] }}</p></div>
+    <a href="{{ url_for('student_drives') }}" class="btn btn-pp-primary"><i class="bi bi-briefcase me-2"></i>Browse Drives</a>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-blue"><div class="pp-stat-icon"><i class="bi bi-briefcase-fill"></i></div><div class="pp-stat-val">{{ approved_drives }}</div><div class="pp-stat-lbl">Open Drives</div></div></div>
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-green"><div class="pp-stat-icon"><i class="bi bi-send-fill"></i></div><div class="pp-stat-val">{{ apps|length }}</div><div class="pp-stat-lbl">Applied</div></div></div>
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-amber"><div class="pp-stat-icon"><i class="bi bi-bookmark-star-fill"></i></div><div class="pp-stat-val">{{ counts.shortlisted }}</div><div class="pp-stat-lbl">Shortlisted</div></div></div>
+    <div class="col-6 col-md-3"><div class="pp-stat-card pp-stat-rose"><div class="pp-stat-icon"><i class="bi bi-trophy-fill"></i></div><div class="pp-stat-val">{{ counts.selected }}</div><div class="pp-stat-lbl">Selected</div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="pp-card">
+        <div class="pp-card-header d-flex justify-content-between align-items-center"><span><i class="bi bi-person me-2"></i>My Profile</span><a href="{{ url_for('student_edit_profile') }}" class="btn btn-xs btn-outline-pp"><i class="bi bi-pencil"></i></a></div>
+        <div class="pp-card-body text-center">
+          <div class="student-avatar mb-3 mx-auto">{{ student['full_name'][0]|upper }}</div>
+          <div class="fw-600 fs-6">{{ student['full_name'] }}</div>
+          <div class="text-muted small mb-3">{{ student['department'] or 'Department not set' }}</div>
+          <div class="profile-stats d-flex justify-content-center gap-4 mb-3">
+            <div class="text-center"><div class="fw-600">{{ '%.2f'|format(student['cgpa']) if student['cgpa'] else '—' }}</div><div class="small text-muted">CGPA</div></div>
+            <div class="text-center"><div class="fw-600">{{ student['graduation_year'] or '—' }}</div><div class="small text-muted">Grad Year</div></div>
+          </div>
+          {% if student['skills'] %}
+          <div class="d-flex flex-wrap gap-1 justify-content-center">{% for sk in student['skills'].split(',')[:5] %}<span class="skill-tag">{{ sk.strip() }}</span>{% endfor %}</div>
+          {% else %}<a href="{{ url_for('student_edit_profile') }}" class="btn btn-sm btn-outline-pp mt-2"><i class="bi bi-plus me-1"></i>Add Skills</a>{% endif %}
+          {% if not student['resume_filename'] %}
+          <div class="mt-3"><a href="{{ url_for('student_edit_profile') }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-upload me-1"></i>Upload Resume</a></div>
+          {% else %}
+          <div class="mt-3"><a href="{{ url_for('static', filename='uploads/' + student['resume_filename']) }}" class="btn btn-sm btn-outline-success" target="_blank"><i class="bi bi-file-earmark-pdf me-1"></i>View Resume</a></div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="pp-card">
+        <div class="pp-card-header d-flex justify-content-between align-items-center"><span><i class="bi bi-file-earmark-text me-2"></i>My Applications</span><a href="{{ url_for('student_history') }}" class="btn btn-xs btn-outline-pp">Full History</a></div>
+        <div class="pp-card-body p-0">
+          {% if apps %}
+          <div class="list-group list-group-flush">
+            {% for a in apps[:8] %}
+            <div class="list-group-item pp-list-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-600">{{ a['job_title'] }}</div>
+                  <small class="text-muted">{{ a['company_name'] }} · {{ a['package'] or 'Package TBD' }} · Applied {{ a['application_date']|fmtdate }}</small>
+                </div>
+                <span class="status-badge status-{{ a['status'] }}">{{ a['status']|capitalize }}</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}<div class="pp-empty"><i class="bi bi-inbox fs-1 text-muted"></i><br>No applications yet. <a href="{{ url_for('student_drives') }}">Browse available drives →</a></div>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

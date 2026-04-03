@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}PlacePro – Campus Placement Portal{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-bg-shapes">
+    <div class="shape s1"></div>
+    <div class="shape s2"></div>
+    <div class="shape s3"></div>
+  </div>
+  <div class="container py-5">
+    <div class="row align-items-center min-vh-80">
+      <div class="col-lg-6">
+        <div class="hero-tag mb-3"><i class="bi bi-mortarboard-fill me-2"></i>Institute Placement Cell</div>
+        <h1 class="hero-title">Smart Campus<br><span class="hero-accent">Placement Portal</span></h1>
+        <p class="hero-sub mt-3">Connecting students with opportunities. Streamlining recruitment for institutes and companies — all in one intelligent platform.</p>
+        <div class="d-flex gap-3 mt-4 flex-wrap">
+          <a href="{{ url_for('register_student') }}" class="btn btn-hero-primary">
+            <i class="bi bi-person-plus me-2"></i>Register as Student
+          </a>
+          <a href="{{ url_for('register_company') }}" class="btn btn-hero-outline">
+            <i class="bi bi-building me-2"></i>Register Company
+          </a>
+        </div>
+        <div class="hero-login-hint mt-3">
+          Already have an account? <a href="{{ url_for('login') }}">Log in here →</a>
+        </div>
+      </div>
+      <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center">
+        <div class="hero-illustration">
+          <div class="ill-card ill-card-1 shadow">
+            <i class="bi bi-briefcase-fill text-primary"></i>
+            <div>
+              <div class="ill-card-title">Software Engineer</div>
+              <div class="ill-card-sub">TechCorp India · ₹18 LPA</div>
+            </div>
+          </div>
+          <div class="ill-card ill-card-2 shadow">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <div>
+              <div class="ill-card-title">Application Selected!</div>
+              <div class="ill-card-sub">Arjun Kumar · CS Dept</div>
+            </div>
+          </div>
+          <div class="ill-card ill-card-3 shadow">
+            <i class="bi bi-people-fill text-warning"></i>
+            <div>
+              <div class="ill-card-title">{{ stats.students }} Students</div>
+              <div class="ill-card-sub">Active on platform</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section py-5">
+  <div class="container">
+    <div class="row g-4 text-center">
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+          <div class="stat-num">{{ stats.students }}</div>
+          <div class="stat-label">Registered Students</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="color:var(--pp-green)"><i class="bi bi-building-fill"></i></div>
+          <div class="stat-num">{{ stats.companies }}</div>
+          <div class="stat-label">Partner Companies</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="color:var(--pp-amber)"><i class="bi bi-briefcase-fill"></i></div>
+          <div class="stat-num">{{ stats.drives }}</div>
+          <div class="stat-label">Active Drives</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="color:var(--pp-rose)"><i class="bi bi-trophy-fill"></i></div>
+          <div class="stat-num">{{ stats.placements }}</div>
+          <div class="stat-label">Placements Done</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-5 hiw-section">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">How It Works</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="hiw-card">
+          <div class="hiw-num">01</div>
+          <div class="hiw-icon"><i class="bi bi-person-plus-fill"></i></div>
+          <h5>Register & Login</h5>
+          <p>Students and companies register independently. Admin reviews and approves company accounts before access is granted.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="hiw-card">
+          <div class="hiw-num">02</div>
+          <div class="hiw-icon" style="color:var(--pp-green)"><i class="bi bi-briefcase-fill"></i></div>
+          <h5>Post & Browse Drives</h5>
+          <p>Companies post placement drives. Admin approves them. Students browse approved drives and apply with cover letters.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="hiw-card">
+          <div class="hiw-num">03</div>
+          <div class="hiw-icon" style="color:var(--pp-amber)"><i class="bi bi-trophy-fill"></i></div>
+          <h5>Track & Get Placed</h5>
+          <p>Companies shortlist and select candidates. Students track their status in real-time. Admin oversees everything.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section py-5">
+  <div class="container text-center">
+    <h2 class="cta-title">Ready to Get Started?</h2>
+    <p class="cta-sub mb-4">Join your institute's placement ecosystem today.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{{ url_for('login') }}" class="btn btn-hero-primary btn-lg">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Login Now
+      </a>
+      <a href="{{ url_for('register_student') }}" class="btn btn-hero-outline btn-lg">
+        <i class="bi bi-person-badge me-2"></i>I'm a Student
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

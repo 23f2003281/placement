@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Student Registration – PlacePro{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="pp-card">
+          <div class="pp-card-header">
+            <h4 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Student Registration</h4>
+            <p class="mb-0 mt-1 text-muted small">Create your student account to access placement drives</p>
+          </div>
+          <div class="pp-card-body">
+            <form method="POST" action="{{ url_for('register_student') }}" novalidate>
+
+              <div class="form-section-title">Account Details</div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Username <span class="req">*</span></label>
+                  <input type="text" name="username" class="form-control pp-input" placeholder="Choose a username" required minlength="3"/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Email <span class="req">*</span></label>
+                  <input type="email" name="email" class="form-control pp-input" placeholder="your@email.com" required/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Password <span class="req">*</span></label>
+                  <input type="password" name="password" class="form-control pp-input" placeholder="Min 6 characters" required minlength="6"/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Confirm Password <span class="req">*</span></label>
+                  <input type="password" name="confirm_password" class="form-control pp-input" placeholder="Repeat password" required/>
+                </div>
+              </div>
+
+              <div class="form-section-title">Personal Information</div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Full Name <span class="req">*</span></label>
+                  <input type="text" name="full_name" class="form-control pp-input" placeholder="Your full name" required/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Phone</label>
+                  <input type="tel" name="phone" class="form-control pp-input" placeholder="+91 XXXXX XXXXX"/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label pp-label">Department</label>
+                  <select name="department" class="form-select pp-input">
+                    <option value="">Select Department</option>
+                    <option>Computer Science & Engineering</option>
+                    <option>Information Technology</option>
+                    <option>Electronics & Communication</option>
+                    <option>Electrical Engineering</option>
+                    <option>Mechanical Engineering</option>
+                    <option>Civil Engineering</option>
+                    <option>Data Science</option>
+                    <option>Artificial Intelligence & ML</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label pp-label">CGPA</label>
+                  <input type="number" name="cgpa" step="0.01" min="0" max="10" class="form-control pp-input" placeholder="e.g. 8.5"/>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label pp-label">Graduation Year</label>
+                  <input type="number" name="graduation_year" min="2020" max="2030" class="form-control pp-input" placeholder="e.g. 2026"/>
+                </div>
+                <div class="col-12">
+                  <label class="form-label pp-label">Skills</label>
+                  <input type="text" name="skills" class="form-control pp-input" placeholder="Python, Machine Learning, React, SQL, ..."/>
+                  <div class="form-text">Comma-separated list of your technical skills</div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-pp-primary px-5">
+                  <i class="bi bi-person-check me-2"></i>Register
+                </button>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-pp">
+                  Already registered? Login
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

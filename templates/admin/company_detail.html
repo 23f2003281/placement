@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ company['company_name'] }} – Admin{% endblock %}
+{% block content %}
+<div class="pp-page">
+  <div class="pp-page-header">
+    <div>
+      <a href="{{ url_for('admin_companies') }}" class="back-link"><i class="bi bi-arrow-left me-1"></i>Back to Companies</a>
+      <h4 class="pp-page-title mt-1">{{ company['company_name'] }}</h4>
+    </div>
+    <div class="d-flex gap-2">
+      {% if company['approval_status'] == 'pending' %}
+      <form method="POST" action="{{ url_for('admin_approve_company', cid=company['id']) }}" class="d-inline"><button class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Approve</button></form>
+      <form method="POST" action="{{ url_for('admin_reject_company', cid=company['id']) }}" class="d-inline"><button class="btn btn-warning"><i class="bi bi-x-lg me-1"></i>Reject</button></form>
+      {% elif company['approval_status'] == 'rejected' %}
+      <form method="POST" action="{{ url_for('admin_approve_company', cid=company['id']) }}" class="d-inline"><button class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Approve</button></form>
+      {% endif %}
+      <form method="POST" action="{{ url_for('admin_blacklist_company', cid=company['id']) }}" class="d-inline">
+        <button class="btn {% if company['is_blacklisted'] %}btn-secondary{% else %}btn-outline-danger{% endif %}">
+          <i class="bi bi-{% if company['is_blacklisted'] %}unlock{% else %}slash-circle{% endif %} me-1"></i>{% if company['is_blacklisted'] %}Unblacklist{% else %}Blacklist{% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-5">
+      <div class="pp-card">
+        <div class="pp-card-header"><i class="bi bi-info-circle me-2"></i>Company Details</div>
+        <div class="pp-card-body">
+          <table class="table pp-detail-table">
+            <tr><th>Status</th><td><span class="status-badge status-{{ company['approval_status'] }}">{{ company['approval_status']|capitalize }}</span></td></tr>
+            <tr><th>Blacklisted</th><td>{% if company['is_blacklisted'] %}<span class="badge bg-danger">Yes</span>{% else %}<span class="badge bg-light text-muted">No</span>{% endif %}</td></tr>
+            <tr><th>Industry</th><td>{{ company['industry'] or '—' }}</td></tr>
+            <tr><th>HR Contact</th><td>{{ company['hr_contact'] or '—' }}</td></tr>
+            <tr><th>HR Email</th><td>{{ company['hr_email'] or '—' }}</td></tr>
+            <tr><th>Website</th><td>{% if company['website'] %}<a href="{{ company['website'] }}" target="_blank">{{ company['website'] }}</a>{% else %}—{% endif %}</td></tr>
+            <tr><th>Registered</th><td>{{ company['created_at']|fmtdate }}</td></tr>
+            <tr><th>Username</th><td class="mono">{{ company['username'] }}</td></tr>
+          </table>
+          {% if company['description'] %}<p class="small text-muted mt-2">{{ company['description'] }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="pp-card">
+        <div class="pp-card-header"><i class="bi bi-briefcase me-2"></i>Placement Drives ({{ drives|length }})</div>
+        <div class="pp-card-body p-0">
+          {% if drives %}
+          <div class="list-group list-group-flush">
+            {% for d in drives %}
+            <div class="list-group-item pp-list-item">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-600">{{ d['job_title'] }}</div>
+                  <small class="text-muted">{{ d['location'] or 'Remote' }} · {{ d['package'] or 'Package TBD' }}</small>
+                  <br><small>Deadline: {{ d['application_deadline']|fmtdate if d['application_deadline'] else '—' }}</small>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                  <span class="status-badge status-{{ d['status'] }}">{{ d['status']|capitalize }}</span>
+                  <small class="text-muted">{{ d['app_count'] }} applicant(s)</small>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}<div class="pp-empty">No drives posted yet.</div>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

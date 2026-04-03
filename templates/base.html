@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}PlacePro – Campus Placement Portal{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg pp-navbar sticky-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+      <span class="brand-icon"><i class="bi bi-mortarboard-fill"></i></span>
+      <span class="brand-text">Place<span class="brand-accent">Pro</span></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        {% if current_user %}
+          {% if current_user['role'] == 'admin' %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_companies') }}"><i class="bi bi-building me-1"></i>Companies</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_students') }}"><i class="bi bi-people me-1"></i>Students</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_drives') }}"><i class="bi bi-briefcase me-1"></i>Drives</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_applications') }}"><i class="bi bi-file-text me-1"></i>Applications</a></li>
+          {% elif current_user['role'] == 'company' %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('company_dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('company_create_drive') }}"><i class="bi bi-plus-circle me-1"></i>New Drive</a></li>
+          {% elif current_user['role'] == 'student' %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('student_dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('student_drives') }}"><i class="bi bi-briefcase me-1"></i>Browse Drives</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('student_history') }}"><i class="bi bi-clock-history me-1"></i>History</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('student_profile') }}"><i class="bi bi-person me-1"></i>Profile</a></li>
+          {% endif %}
+          <li class="nav-item ms-2">
+            <div class="d-flex align-items-center gap-2">
+              <span class="role-badge role-{{ current_user['role'] }}">{{ current_user['role']|upper }}</span>
+              <span class="nav-username">{{ current_user['username'] }}</span>
+              <a href="{{ url_for('logout') }}" class="btn btn-sm btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </a>
+            </div>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register_student') }}">Student Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register_company') }}">Company Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container container-fluid px-4 mt-3">
+      {% for cat, msg in messages %}
+        <div class="alert alert-{{ cat }} alert-dismissible fade show pp-alert" role="alert">
+          {% if cat == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+          {% elif cat == 'danger' %}<i class="bi bi-exclamation-circle-fill me-2"></i>
+          {% elif cat == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {% else %}<i class="bi bi-info-circle-fill me-2"></i>{% endif %}
+          {{ msg }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- MAIN CONTENT -->
+<main class="pp-main">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="pp-footer mt-auto">
+  <div class="container-fluid px-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+      <span class="footer-brand"><i class="bi bi-mortarboard-fill me-1"></i>PlacePro &copy; {{ 2024 }}</span>
+      <span class="footer-sub">Campus Placement Management System</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

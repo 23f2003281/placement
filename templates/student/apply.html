@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Apply – {{ drive['job_title'] }}{% endblock %}
+{% block content %}
+<div class="pp-page">
+  <div class="pp-page-header">
+    <div><a href="{{ url_for('student_drives') }}" class="back-link"><i class="bi bi-arrow-left me-1"></i>Back to Drives</a><h4 class="pp-page-title mt-1"><i class="bi bi-send me-2"></i>Apply for Position</h4></div>
+  </div>
+  <div class="row g-4 justify-content-center">
+    <div class="col-lg-5">
+      <div class="pp-card">
+        <div class="pp-card-header"><i class="bi bi-briefcase me-2"></i>Drive Details</div>
+        <div class="pp-card-body">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="drive-company-logo-lg">{{ drive['company_name'][0]|upper }}</div>
+            <div><h5 class="mb-0">{{ drive['job_title'] }}</h5><div class="text-muted">{{ drive['company_name'] }}</div></div>
+          </div>
+          <table class="table pp-detail-table">
+            {% if drive['location'] %}<tr><th><i class="bi bi-geo-alt me-1"></i>Location</th><td>{{ drive['location'] }}</td></tr>{% endif %}
+            {% if drive['package'] %}<tr><th><i class="bi bi-cash me-1"></i>Package</th><td>{{ drive['package'] }}</td></tr>{% endif %}
+            {% if drive['application_deadline'] %}<tr><th><i class="bi bi-calendar me-1"></i>Deadline</th><td>{{ drive['application_deadline']|fmtdate }}</td></tr>{% endif %}
+          </table>
+          {% if drive['job_description'] %}<div class="pp-label mb-1">Job Description</div><p class="small text-muted">{{ drive['job_description'] }}</p>{% endif %}
+          {% if drive['eligibility_criteria'] %}<div class="pp-label mb-1">Eligibility</div><p class="small text-muted">{{ drive['eligibility_criteria'] }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="pp-card">
+        <div class="pp-card-header"><i class="bi bi-person-check me-2"></i>Your Application</div>
+        <div class="pp-card-body">
+          <div class="pp-info-box mb-4"><i class="bi bi-info-circle-fill me-2"></i>Your profile will be shared with the company. <a href="{{ url_for('student_edit_profile') }}">Edit Profile →</a></div>
+          <form method="POST" action="{{ url_for('student_apply', did=drive['id']) }}">
+            <div class="mb-4">
+              <label class="form-label pp-label">Cover Letter <span class="text-muted fw-400">(optional)</span></label>
+              <textarea name="cover_letter" rows="6" class="form-control pp-input" placeholder="Introduce yourself and explain why you're a great fit..."></textarea>
+            </div>
+            <div class="apply-confirm-box mb-4"><i class="bi bi-check-circle-fill text-success me-2"></i><span>By applying, you confirm you meet the eligibility criteria.</span></div>
+            <div class="d-flex gap-3">
+              <button type="submit" class="btn btn-pp-primary px-5"><i class="bi bi-send me-2"></i>Submit Application</button>
+              <a href="{{ url_for('student_drives') }}" class="btn btn-outline-pp">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
